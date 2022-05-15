@@ -11,4 +11,42 @@ fastify.register(import('@fastify/multipart'), {
 });
 fastify.register(import('@fastify/cookie'));
 
+fastify.post('/uppercase', (request, reply) => {
+  const toUppCase = request.body.toUpperCase();
+  if (toUppCase.includes('FUCK')) {
+    return reply.status(403).send('unresolved');
+  };
+  return reply.send(toUppCase);
+});
+
+
+fastify.post('/lowercase', (request, reply) => {
+  const toLowCase = request.body.toLowerCase();
+  if (toLowCase.includes('fuck')) {
+    return reply.status(403).send('unresolved');
+  };
+  return reply.send(toLowCase);
+});
+
+fastify.get('/user/:id', (request, reply) => {
+const {id} = request.params;
+
+if(users[id]) {
+  return reply.send(users[id]);
+}
+reply.status(400).send('User not exist');
+})
+
+
+fastify.get('/users', (request, reply) => {
+  const queryFilter = request.query.filter;
+  const queryValue = request.query.value;
+
+  const usersArray = Object.values(users).filter(user => {
+    return user[queryFilter] == queryValue;
+  })
+  reply.send(usersArray);
+
+})
+
 export default fastify;
