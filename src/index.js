@@ -39,14 +39,26 @@ reply.status(400).send('User not exist');
 
 
 fastify.get('/users', (request, reply) => {
-  const queryFilter = request.query.filter;
-  const queryValue = request.query.value;
+  // const queryFilter = request.query.filter;
+  // const queryValue = request.query.value;
+  //
+  // const usersArray = Object.values(users).filter(user => {
+  //   return user[queryFilter] == queryValue;
+  // })
+  // reply.send(usersArray);
 
-  const usersArray = Object.values(users).filter(user => {
-    return user[queryFilter] == queryValue;
-  })
-  reply.send(usersArray);
+  const {filter, value} = request.query
+  const usersArr = Object.values(users);
+  if (!filter || !value) {
+    return reply.send(usersArr);
+  }
+  else {
+    const usersArray = Object.values(users).filter(user => {
+        return user[filter].toString() === value;
+  });
+    reply.send(usersArray);
+}
+});
 
-})
 
 export default fastify;
